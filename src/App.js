@@ -11,12 +11,41 @@ class App extends React.Component {
       sort: ""
     };
   }
-  sortProducts(event) {
+  sortProducts = event => {
+    const sort = event.target.value;
     console.log(event.target.value);
-  }
-  filterProducts(event) {
+    this.setState(state => ({
+      sort: sort,
+      products: this.state.products
+        .slice()
+        .sort((a, b) =>
+          sort === "lowest"
+            ? a.price > b.price
+              ? 1
+              : -1
+            : sort === "highest"
+            ? a.price > b.price
+              ? 1
+              : -1
+            : a._id > b._id
+            ? 1
+            : -1
+        )
+    }));
+  };
+  filterProducts = event => {
     console.log(event.target.value);
-  }
+    if (event.target.value === "") {
+      this.setState({ size: event.target.value, products: data.products });
+    } else {
+      this.setState({
+        size: event.target.value,
+        products: data.products.filter(
+          products => products.availableSizes.indexOf(event.target.value) >= 0
+        )
+      });
+    }
+  };
   render() {
     return (
       <div className="grid-container">
